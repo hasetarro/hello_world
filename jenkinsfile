@@ -1,0 +1,70 @@
+pipeline {
+    //agent any
+    agent { label 'linux' }
+    
+    stages {
+        
+        stage('hey'){
+            steps {
+                echo 'hey'
+            }
+        }
+        
+        stage('git'){
+            steps {
+                echo 'git'
+                git branch: 'main', credentialsId: 'e86d95e8-07a6-4e5c-9eb0-461b9860a214', url: 'git@github.com:hasetarro/hello_world.git'
+            }
+        }
+        
+        stage('generate-test-resources process-test-resources'){
+            steps {
+                echo 'generate-test-resources process-test-resources'
+                sh 'mvn generate-test-resources process-test-resources'
+            }
+        }
+        
+        stage('Compile'){
+            steps {
+                echo 'Compile'
+                sh 'mvn compile'
+            }
+        }
+        
+        stage('Test'){
+            steps {
+                echo 'Test'
+                sh 'mvn test'
+            }
+        }
+        
+        stage('Package'){
+            steps {
+                echo 'Package'
+                sh 'mvn package'
+            }
+        }
+
+        stage('bye'){
+            steps {
+                echo 'bye'
+            }
+        }
+        
+    }
+    post {
+
+        always {
+            echo 'always'
+            echo 'Archive'
+            archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+        }
+      
+        success {
+            echo 'success'
+            //echo 'Archive'
+            //archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+       }
+	   
+    }
+}
