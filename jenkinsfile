@@ -1,10 +1,14 @@
 pipeline {
     //agent any
     agent { label 'linux' }
-    
+	
+	tools {
+	  // No valid tools specified
+	  tool name: '3.9.1', type: 'maven'
+	}
+	
     stages {
-        
-        stage('hey'){
+         stage('hey'){
             steps {
                 echo 'hey'
             }
